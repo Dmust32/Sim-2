@@ -1,3 +1,2 @@
 select * from Users
-where username = $1 AND
-where pass = $2
+where username = $1 AND pass = $2

@@ -2,7 +2,6 @@ module.exports = {
     create: (req, res, next) => {
         const dbInstance = req.app.get('db');
         const {
-            user_id,
             prop_name,
             prop_desc,
             address,
@@ -13,7 +12,8 @@ module.exports = {
             loan_amount,
             monthly_mortgage,
             desired_rent } = req.body;
-        dbInstance.create_prop([user_id,
+        const{session}= req;
+        dbInstance.create_prop([session.user.id,
             prop_name,
             prop_desc,
             address,
@@ -26,16 +26,21 @@ module.exports = {
             desired_rent])
             .then(properties => res.send(properties))    
     },
+
     get: (req, res, next) => {
         const dbInstance = req.app.get('db');
-        const {user_id} = req.session.user_id;
-        dbInstance.get_props([user_id])
+        const {session} = req;
+
+        dbInstance.get_props([session.user.id])
         .then(properties => res.send(properties))
     },
+
     delete: (req, res, next) => {
         const dbInstance = req.app.get('db');
         const {params} = req;
-        dbInstance.delete_prop([params.id])
+        const {session} = req;
+
+        dbInstance.delete_prop([params.id, session.user.id])
         .then(properties => res.send(properties))
     }
 }
